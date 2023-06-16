@@ -20,6 +20,21 @@ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
 ```
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
 ```
+or
+```
+sudo mkdir -p /etc/apt/keyrings
+
+sudo curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+| sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes.gpg
+     
+sudo echo "deb [arch=$(dpkg --print-architecture) \
+  signed-by=/etc/apt/keyrings/kubernetes.gpg] \
+  http://apt.kubernetes.io/ kubernetes-xenial main" \
+  | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
+
+sudo apt-get update
+sudo apt-get install kubeadm kubelet kubectl
+```
 
 ```
 sudo apt-get update
@@ -63,6 +78,10 @@ Please follow the steps carefully and read each command before executing.
 
 ```
 aws s3api create-bucket --bucket kops-abhi-storage --region us-east-1
+```
+or
+```
+aws s3api create-bucket --bucket kops-abhi-storage --region us-east-1 --create-bucket-configuration LocationConstraint=us-east-1
 ```
 
 ### Create the cluster 
